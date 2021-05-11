@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring Boot Actuator log util</title>
+
+    <link th:rel="stylesheet" th:href="@{assets/datatable/datatables.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+
+</head>
+<body>
+
+<nav class="navbar sticky-top navbar-light bg-dark navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">Spring Boot Actuator 👟 | Log Admin</a>
+        <button class="nav-item nav-link disabled" th:onclick="'javascript:evictCache()'">Evict</button>
+        <a class="nav-item nav-link disabled" href="/config">
+            Host: <b><span th:text="${config.host}"></span></b> | Port: <b><span th:text="${config.port}"></span></b>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/config">Config</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 mt-5 mb-5">
+            <table id="example" class="table table-bordered table-responsive" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>Level</th>
+                    <th>Logger</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{assets/datatable/datatables.js}"></script>
+
+<script>
+    $('#example').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            "url": "/logs",
+            "type": "POST",
+            "dataType": "json",
+            "contentType": "application/json",
+            "data": function (d) {
+                return JSON.stringify(d);
+            }
+        },
+        "columns": [
+            {"data": "level", "width": "50%"},
+            {"data": "logger"}
+        ]
+    });
+
+    $(document).ready(function () {
+        var table = $('#example').DataTable();
+
+        $('#example tbody').on('dblclick', 'tr', function () {
+            const data = table.row(this).data();
+            const logger = data.logger;
+            const level = data.level;
+            location.href = "/edit?logger=" + logger + "&level=" + level;
+        });
+    });
+
+    function evictCache() {
+        //display the spinner
+        $('#ajaxLoader').show();
+
+        console.log("evicting cache...");
+
+        //do the ajax call
+        $.post("/logs/evictCache");
+    }
+</script>
+
+</body>
+</html>

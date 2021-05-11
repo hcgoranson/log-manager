@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring Boot Actuator log util</title>
+
+    <link th:rel="stylesheet" th:href="@{assets/datatable/datatables.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <style>
+        label {
+            display: inline-block;
+            width: 150px;
+            text-align: right;
+        }
+        input {
+            border: 1px solid;
+            border-radius: 4px;
+            height: 38px;
+            line-height: 38px;
+            padding-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar sticky-top navbar-light bg-dark navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">Spring Boot Actuator 👟 | Log Admin</a>
+        <a class="nav-item nav-link disabled" href="/config">
+            Host: <b><span th:text="${config.host}"></span></b> | Port: <b><span th:text="${config.port}"></span></b>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/config">Config</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6" style="padding-top: 20px">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Configure</h2>
+                </div>
+            </div>
+            <form action="#" th:action="@{/logs/configure}" method="post" th:object="${config}">
+                <div>
+                    <div>
+                        <label>Scheme:</label>
+                        <input type="text" th:field="*{scheme}"/>
+                    </div>
+                    <div>
+                        <label>Host:</label>
+                        <input type="text" th:field="*{host}"/>
+                    </div>
+                    <div>
+                        <label>Port:</label>
+                        <input type="text" th:field="*{port}"/>
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="submit">Update</button>
+                <a class="btn btn-info" href="#" th:href="@{/}"> Back </a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
